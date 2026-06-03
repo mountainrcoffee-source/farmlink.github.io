@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmLink — Digitizing Ethiopia's Coffee Supply Chain</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green-900: #1a3c2a; --green-700: #245e3e; --green-600: #2d7a4f;
+            --green-500: #3a9d68; --green-400: #5bbf82; --green-200: #b8e6cc;
+            --green-100: #daf2e3; --green-50: #edf8f1;
+            --gold-400: #d4a84a; --gold-100: #fdf3dc;
+            --brown-800: #3d2b1a; --cream: #fdf9f3;
+            --white: #ffffff; --gray-900: #1a1a1a; --gray-700: #4a4a4a;
+            --gray-300: #d4d4d4; --gray-200: #e8e8e8; --gray-100: #f5f5f5; --gray-50: #fafafa;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-900); background: var(--white);
+            line-height: 1.6; -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200); z-index: 1000; padding: 14px 0;
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--green-900); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .logo-icon { color: var(--green-500); font-size: 1.4rem; }
+        .nav-links { display: flex; list-style: none; gap: 24px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--gray-700); font-weight: 500; font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--green-600); }
+        .nav-cta { background: var(--green-600); color: var(--white); padding: 8px 18px; border-radius: 8px; font-weight: 600; text-decoration: none; }
+        .mobile-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-900); }
+        .hero { padding: 120px 0 80px; background: linear-gradient(160deg, var(--green-50) 0%, var(--cream) 40%, var(--white) 100%); }
+        .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .hero-badge { display: inline-block; background: var(--green-100); color: var(--green-700); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px; }
+        .hero h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.15; color: var(--green-900); margin-bottom: 20px; }
+        .hero-description { font-size: 1.05rem; color: var(--gray-700); margin-bottom: 28px; line-height: 1.65; max-width: 520px; }
+        .hero-cta { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--green-600); color: var(--white); }
+        .btn-primary:hover { background: var(--green-700); }
+        .btn-secondary { background: var(--white); color: var(--green-700); border: 2px solid var(--green-400); }
+        .btn-secondary:hover { background: var(--green-50); }
+        .hero-metric { padding: 10px 18px; background: var(--white); border: 1px solid var(--gold-400); border-radius: 8px; display: inline-block; }
+        .metric-highlight { font-weight: 700; color: var(--brown-800); font-size: 0.9rem; }
+        .hero-visual { display: flex; justify-content: center; }
+        .hero-card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 16px 48px rgba(0,0,0,0.08); border: 1px solid var(--gray-200); width: 100%; max-width: 380px; }
+        .card-dots { display: flex; gap: 6px; margin-bottom: 20px; }
+        .card-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-300); }
+        .card-dots span:first-child { background: var(--green-500); }
+        .card-flow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .flow-step { text-align: center; }
+        .flow-icon { font-size: 1.8rem; margin-bottom: 6px; }
+        .flow-label { font-size: 0.8rem; font-weight: 600; color: var(--gray-700); }
+        .flow-arrow { font-size: 1.3rem; color: var(--green-400); font-weight: 700; }
+        .card-status { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--green-50); border-radius: 8px; font-size: 0.8rem; font-weight: 500; color: var(--green-700); }
+        .status-indicator { width: 7px; height: 7px; background: var(--green-500); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-tag { display: inline-block; background: var(--gold-100); color: var(--brown-800); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+        .section-header h2 { font-size: 2rem; font-weight: 800; color: var(--green-900); margin-bottom: 14px; }
+        .section-header p { font-size: 1.05rem; color: var(--gray-700); max-width: 600px; margin: 0 auto; }
+        .about { padding: 80px 0; background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .about-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 28px; }
+        .about-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .about-icon { font-size: 2.2rem; margin-bottom: 14px; }
+        .about-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--green-900); margin-bottom: 10px; }
+        .about-card p { color: var(--gray-700); font-size: 0.9rem; line-height: 1.55; }
+        .capabilities { padding: 80px 0; background: var(--green-50); }
+        .capabilities-list { display: grid; gap: 14px; max-width: 850px; margin: 0 auto; }
+        .capability-item { display: flex; gap: 20px; background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px 28px; }
+        .capability-item:hover { transform: translateX(3px); box-shadow: 0 3px 12px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .capability-number { font-size: 1.3rem; font-weight: 800; color: var(--green-400); min-width: 35px; }
+        .capability-content h3 { font-size: 1.1rem; font-weight: 700; color: var(--green-900); margin-bottom: 6px; }
+        .capability-content p { color: var(--gray-700); font-size: 0.9rem; line-height: 1.55; margin-bottom: 10px; }
+        .capability-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+        .capability-tags li { background: var(--green-100); color: var(--green-700); padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .difference { padding: 80px 0; background: var(--white); }
+        .difference-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .difference-card { background: var(--cream); border: 1px solid var(--gray-200); border-radius: 12px; padding: 28px; }
+        .difference-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .diff-icon { font-size: 2.2rem; margin-bottom: 14px; }
+        .difference-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--brown-800); margin-bottom: 10px; }
+        .difference-card p { color: var(--gray-700); font-size: 0.9rem; line-height: 1.55; }
+        .testimonial { padding: 60px 0; background: var(--green-900); }
+        .testimonial-card { text-align: center; max-width: 650px; margin: 0 auto; padding: 0 20px; }
+        .quote-icon { font-size: 4rem; color: var(--green-400); line-height: 1; margin-bottom: 12px; font-family: Georgia, serif; }
+        .testimonial-card blockquote { font-size: 1.2rem; color: var(--white); font-weight: 500; line-height: 1.65; margin-bottom: 20px; }
+        .testimonial-attribution strong { display: block; color: var(--green-200); font-size: 0.95rem; }
+        .testimonial-attribution span { color: var(--green-400); font-size: 0.85rem; }
+        .contact { padding: 80px 0; background: var(--gray-50); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 850px; margin: 0 auto; }
+        .contact-info { display: flex; flex-direction: column; gap: 18px; }
+        .contact-item { display: flex; gap: 14px; align-items: flex-start; }
+        .contact-icon { font-size: 1.3rem; }
+        .contact-item strong { display: block; color: var(--green-900); font-size: 0.85rem; margin-bottom: 2px; }
+        .contact-item p { color: var(--gray-700); font-size: 0.9rem; }
+        .contact-cta-box { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+        .contact-cta-box h3 { font-size: 1.2rem; color: var(--green-900); }
+        .contact-cta-box p { color: var(--gray-700); font-size: 0.9rem; margin-bottom: 4px; }
+        .footer { background: var(--green-900); color: var(--white); padding: 50px 0 24px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+        .footer-brand .logo { color: var(--white); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+        .footer-brand .logo .logo-icon { color: var(--green-400); }
+        .footer-brand p { color: var(--green-200); font-size: 0.85rem; line-height: 1.55; margin-bottom: 16px; max-width: 360px; }
+        .social-links { display: flex; gap: 10px; }
+        .social-links a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--white); text-decoration: none; font-size: 0.75rem; font-weight: 700; }
+        .social-links a:hover { background: var(--green-600); }
+        .footer-links h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 14px; color: var(--green-200); }
+        .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .footer-links a { color: var(--green-100); text-decoration: none; font-size: 0.85rem; }
+        .footer-links a:hover { color: var(--white); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 0.8rem; color: var(--green-300); flex-wrap: wrap; gap: 8px; }
+        .footer-bottom a { color: var(--green-300); text-decoration: none; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--gray-200); gap: 16px; }
+            .nav-links.active { display: flex; }
+            .mobile-toggle { display: block; }
+            .hero .container { grid-template-columns: 1fr; text-align: center; }
+            .hero h1 { font-size: 2rem; }
+            .hero-description { margin: 0 auto 28px; }
+            .hero-cta { justify-content: center; }
+            .hero-visual { display: none; }
+            .contact-grid, .footer-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 1.6rem; }
+            .capability-item { flex-direction: column; gap: 12px; }
+            .contact-cta-box { align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo"><span class="logo-icon">⟐</span> FarmLink</a>
+            <ul class="nav-links" id="navMenu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#capabilities">Capabilities</a></li>
+                <li><a href="#difference">Why FarmLink</a></li>
+                <li><a href="#contact" class="nav-cta">Request Demo</a></li>
+            </ul>
+            <button class="mobile-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Built for Ethiopia's Coffee Supply Chain</div>
+                <h1>Digitize Sourcing.<br>Streamline Processing.<br>Simplify Trade.</h1>
+                <p class="hero-description">FarmLink is the only digital platform that unifies smallholder sourcing, wet-mill processing, and export trade into one intelligent, offline-first ecosystem—delivering full traceability, operational efficiency, and producer empowerment where others cannot reach.</p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary">Request a Demo</a>
+                    <a href="#capabilities" class="btn btn-secondary">Explore Capabilities</a>
+                </div>
+                <div class="hero-metric"><span class="metric-highlight">Tracing Every Bean to Its Grower</span></div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="card-dots"><span></span><span></span><span></span></div>
+                    <div class="card-flow">
+                        <div class="flow-step"><div class="flow-icon">🌱</div><div class="flow-label">Sourcing</div></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step"><div class="flow-icon">⚙️</div><div class="flow-label">Processing</div></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step"><div class="flow-icon">🚢</div><div class="flow-label">Trade</div></div>
+                    </div>
+                    <div class="card-status"><span class="status-indicator"></span> Real-time data synchronized</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About FarmLink</span>
+                <h2>Purpose-Built for Ethiopian Coffee</h2>
+                <p>FarmLink is not adapted from another crop or imported from another continent. It is a deeply integrated digital infrastructure that connects the three critical stages of the coffee supply chain into one seamless, offline-capable system.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card"><div class="about-icon">🇪🇹</div><h3>Built on the Ground</h3><p>Developed in Ethiopian washing stations with producers and cooperatives, handling local nuances that generic platforms overlook.</p></div>
+                <div class="about-card"><div class="about-icon">📡</div><h3>Offline-First</h3><p>The entire field workflow—registration, purchasing, receipting—functions perfectly offline. Connectivity is optional, not required.</p></div>
+                <div class="about-card"><div class="about-icon">🔗</div><h3>Architectural Traceability</h3><p>Traceability is not a feature added later. It is the natural architecture of the platform, emerging from daily operations automatically.</p></div>
+                <div class="about-card"><div class="about-icon">📊</div><h3>Deep Data</h3><p>Granular operational data—yields, losses, farmer productivity—that surface-level tools miss, fueling analytics and buyer confidence.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="capabilities" class="capabilities">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Key Capabilities</span>
+                <h2>One Platform, Three Stages, Complete Visibility</h2>
+                <p>FarmLink digitizes the entire operational workflow, creating one continuous, verifiable digital record from farm plot to export container.</p>
+            </div>
+            <div class="capabilities-list">
+                <div class="capability-item">
+                    <div class="capability-number">01</div>
+                    <div class="capability-content">
+                        <h3>Unified Smallholder Sourcing</h3>
+                        <p>Digital farmer identities, real-time purchasing with scale integration, instant receipt printing, and automated payment reconciliation—working at the speed of a queueing farmer, online or offline.</p>
+                        <ul class="capability-tags"><li>Digital Registration</li><li>GPS Farm Mapping</li><li>Instant Receipts</li><li>Payment Integration</li></ul>
+                    </div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-number">02</div>
+                    <div class="capability-content">
+                        <h3>End-to-End Operational Traceability</h3>
+                        <p>Every cherry purchase links to a geolocated farmer. Every processing lot connects to source deliveries. Every export container carries digital history. One unbroken chain of custody, queryable in real time.</p>
+                        <ul class="capability-tags"><li>Batch Tracking</li><li>Chain of Custody</li><li>Source Verification</li><li>Audit Trail</li></ul>
+                    </div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-number">03</div>
+                    <div class="capability-content">
+                        <h3>Offline-First Intelligence</h3>
+                        <p>The mobile app operates at full capacity without internet. Weighing, receipting, and verification all function offline. Data syncs intelligently when connectivity returns—no batch uploads, no manual transfers.</p>
+                        <ul class="capability-tags"><li>Full Offline Mode</li><li>Auto-Sync</li><li>No Data Loss</li><li>Cloud Backup</li></ul>
+                    </div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-number">04</div>
+                    <div class="capability-content">
+                        <h3>Processing Visibility & Inventory Integrity</h3>
+                        <p>Track coffee through pulping, fermentation, drying, hulling, and grading—with the link back to producer and plot maintained. Yield and loss calculated automatically. Inventory reconciled against sourced volumes.</p>
+                        <ul class="capability-tags"><li>Stage Tracking</li><li>Yield Analytics</li><li>Quality Grading</li><li>Inventory Control</li></ul>
+                    </div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-number">05</div>
+                    <div class="capability-content">
+                        <h3>Automated Trade & Compliance Readiness</h3>
+                        <p>Export documentation generated from live operations. EUDR due diligence pulls geolocation data automatically. Certification evidence for Rainforest Alliance, Organic, and Fair Trade organized and exportable on demand.</p>
+                        <ul class="capability-tags"><li>EUDR Ready</li><li>Certification Support</li><li>Buyer Reports</li><li>Export Docs</li></ul>
+                    </div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-number">06</div>
+                    <div class="capability-content">
+                        <h3>Producer Empowerment by Design</h3>
+                        <p>Every farmer receives a permanent digital profile, instant transaction receipts, and verifiable payment history. This strengthens bargaining position, provides credit access evidence, and formalizes their supply chain role.</p>
+                        <ul class="capability-tags"><li>Digital Identity</li><li>Payment History</li><li>Receipt Records</li><li>Credit Readiness</li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="difference" class="difference">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">What Makes FarmLink Different</span>
+                <h2>Not Easily Copied. Not Easily Matched.</h2>
+                <p>FarmLink's competitive advantage lies in the depth of its integration, the reality of its offline capability, and its architectural commitment to traceability.</p>
+            </div>
+            <div class="difference-grid">
+                <div class="difference-card"><div class="diff-icon">🏗️</div><h3>Architectural Traceability</h3><p>Traceability is not a module or a feature. It is the fundamental architecture of the platform. Every data point connects by design—emerging automatically from daily operations.</p></div>
+                <div class="difference-card"><div class="diff-icon">📡</div><h3>Genuine Offline-First</h3><p>Not "offline when possible." The entire field workflow functions without connectivity as the default mode. This is the foundation—without it, remote sourcing cannot truly be digitized.</p></div>
+                <div class="difference-card"><div class="diff-icon">🇪🇹</div><h3>Built for Ethiopia</h3><p>Developed on the ground in Ethiopian washing stations with Ethiopian producers. It handles local sourcing structures, payment flows, and operational realities that adapted software cannot.</p></div>
+                <div class="difference-card"><div class="diff-icon">🔐</div><h3>Deep, Not Surface Data</h3><p>Captures granular operational data—processing yields, losses, farmer-level productivity—that simple data collection tools miss entirely. This depth powers real analytics and genuine buyer confidence.</p></div>
+                <div class="difference-card"><div class="diff-icon">🔗</div><h3>One System, Not a Patchwork</h3><p>Replaces fragmented sourcing apps, processing spreadsheets, and trade documentation tools with a single synchronized platform where data flows seamlessly across all three stages.</p></div>
+                <div class="difference-card"><div class="diff-icon">🛡️</div><h3>Compliance as Output, Not Project</h3><p>EUDR and certification documentation are generated from live operational data, not assembled retrospectively. Compliance becomes a routine output of doing business.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonial">
+        <div class="container">
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <blockquote>FarmLink gave us the confidence to ship to Europe. We can now trace every bean to its grower and instantly produce the geolocation data our buyers demand for EUDR.</blockquote>
+                <div class="testimonial-attribution"><strong>Washing Station Manager</strong><span>Ethiopian Coffee Cooperative</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Get in Touch</span>
+                <h2>Ready to Digitize Your Supply Chain?</h2>
+                <p>Interested in a platform that traces every bean to its grower—automatically? Contact us for a personalized demonstration or partnership discussion.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item"><span class="contact-icon">📍</span><div><strong>Location</strong><p>Addis Ababa, Ethiopia</p></div></div>
+                    <div class="contact-item"><span class="contact-icon">✉️</span><div><strong>Email</strong><p>info@farmlink.et</p></div></div>
+                    <div class="contact-item"><span class="contact-icon">📞</span><div><strong>Phone</strong><p>+251 XXX XXX XXX</p></div></div>
+                    <div class="contact-item"><span class="contact-icon">🌐</span><div><strong>Website</strong><p>www.farmlink.et</p></div></div>
+                </div>
+                <div class="contact-cta-box">
+                    <h3>Take the Next Step</h3>
+                    <p>See how FarmLink can digitize your sourcing, streamline processing, and simplify trade.</p>
+                    <a href="#" class="btn btn-primary">Schedule a Demo</a>
+                    <a href="#" class="btn btn-secondary">Request a Proposal</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo"><span class="logo-icon">⟐</span> FarmLink</a>
+                    <p>Digitizing sourcing, processing, and trade for the Ethiopian coffee supply chain. Tracing every bean to its grower—automatically.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="LinkedIn">LN</a><a href="#" aria-label="Telegram">TG</a><a href="#" aria-label="YouTube">YT</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li><li><a href="#about">About</a></li><li><a href="#capabilities">Capabilities</a></li><li><a href="#">Mobile App</a></li><li><a href="#">Web Platform</a></li><li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Solutions</h4>
+                    <ul>
+                        <li><a href="#">Smallholder Sourcing</a></li><li><a href="#">Processing Management</a></li><li><a href="#">Trade & Export</a></li><li><a href="#">EUDR Compliance</a></li><li><a href="#">Traceability</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FarmLink. All Rights Reserved.</p>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.capability-item, .difference-card, .about-card').forEach(function(el) {
+            el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
